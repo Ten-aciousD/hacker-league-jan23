@@ -1,4 +1,4 @@
-2from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task
 from hello_world.tools.custom_tool import CustomTool
 import yaml
 from dotenv import load_dotenv
