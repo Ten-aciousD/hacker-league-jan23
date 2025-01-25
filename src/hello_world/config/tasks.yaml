@@ -12,3 +12,8 @@ analysis_task:
   description: "Monitor and analyze system performance using defined metrics. Consider: 1) Current performance metrics 2) Optimization opportunities 3) Threshold violations 4) Recommended actions based on analysis.yaml rules"
   expected_output: Performance analysis report with optimization recommendations
   agent: analyzer
+
+auction_task:
+  description: "Find the date and time of the next auction in Dekalb county Georgia."
+  expected_output: Date and time of the next auction in Dekalb county Georgia.
+  agent: auction_finder

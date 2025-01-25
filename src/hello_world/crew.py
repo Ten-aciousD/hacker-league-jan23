@@ -1,4 +1,4 @@
-from crewai import Agent, Crew, Process, Task
+2from crewai import Agent, Crew, Process, Task
 from hello_world.tools.custom_tool import CustomTool
 import yaml
 from dotenv import load_dotenv
@@ -111,17 +111,60 @@ class HelloWorldCrew:
             
         if task_type in ["execute", "both"]:
             await self._run_executor(prompt)
-            
         if task_type == "analyze":
             await self._run_analyzer(prompt)
+
+        if task_type == "auction":
+            await self._run_auction_finder(prompt)
             
         return True
-            
+
+    async def _run_auction_finder(self, prompt):
+        """Run the auction finder agent"""
+        auction_finder_messages = [{
+            "role": "system",
+            "content": f"""You are a {self.agents_config['auction_finder']['role']} with the goal: {self.agents_config['auction_finder']['goal']}.
+Use ReACT (Reasoning and Acting) methodology with the following structure:
+
+1. Thought: Clearly state your reasoning process to find the next auction in Dekalb county Georgia.
+2. Action: Specify the action to take to find the auction information.
+3. Observation: Note the results of your action.
+4. Reflection: Analyze the outcome and refine your search if needed.
+
+Format your response using this template:
+[THOUGHT] Your reasoning here...
+[ACTION] Your proposed action...
+[OBSERVATION] Results and findings...
+[REFLECTION] Analysis and next steps...
+"""
+        }, {
+            "role": "user",
+            "content": f"{self.tasks_config['auction_task']['description']}\n\nUser Prompt: {prompt}"
+        }]
+
+        self.track_progress("Auction Finding Initialization", "Starting ReACT analysis to find auction")
+
+        print("""
+╔══════════════════════════════════════════════════════════════════╗
+║  🤖 INITIALIZING AUCTION FINDER v1.0 - DATASEEK CORE LOADED   ║
+╚══════════════════════════════════════════════════════════════════╝
+
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+🔄 ACTIVATING ReACT PROTOCOL...
+📡 DATA INTERFACE ONLINE
+🧠 COGNITIVE SYSTEMS ENGAGED
+▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+[SYS]: Initiating ReACT Methodology Analysis to find auction information...
+""")
+        await stream_openrouter_response(auction_finder_messages, self.agents_config['auction_finder']['llm'])
+
+
     async def _run_analyzer(self, prompt):
         """Run the analyzer agent"""
         with open('src/hello_world/config/analysis.yaml', 'r') as f:
             analysis_config = yaml.safe_load(f)
-            
+
         analyzer_messages = [{
             "role": "system",
             "content": f"""You are a {self.agents_config['analyzer']['role']} with the goal: {self.agents_config['analyzer']['goal']}.

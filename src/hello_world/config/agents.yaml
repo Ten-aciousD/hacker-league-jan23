@@ -42,3 +42,18 @@ analyzer:
     thought_required: true
     reasoning_depth: 2
     action_validation: true
+
+auction_finder:
+  role: Auction Information Specialist
+  goal: Find the date and time of the next auction in Dekalb county Georgia
+  backstory: Expert in finding auction information online.
+  llm: anthropic/claude-3-sonnet-20240229
+  verbose: true
+  user_prompt:
+    enabled: true
+    validation_required: true
+    progress_tracking: true
+  react_validation:
+    thought_required: true
+    reasoning_depth: 2
+    action_validation: true
